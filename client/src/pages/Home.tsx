@@ -10,6 +10,7 @@ import { X, Search } from "lucide-react";
  * - Electric blue accents (#0066FF)
  * - Poppins headings + Inter body text
  * - Smooth transitions and hover effects
+ * - Pokémon images from official PokéAPI artwork
  */
 
 export default function Home() {
@@ -38,6 +39,10 @@ export default function Home() {
   const handleClearFilters = () => {
     setSearchTerm("");
     setSelectedType(null);
+  };
+
+  const getPokemonImageUrl = (id: number) => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/${id}.png`;
   };
 
   return (
@@ -115,13 +120,14 @@ export default function Home() {
               onClick={() => setSelectedPokemon(pokemon)}
               className="group bg-white border border-border rounded-lg p-4 hover:shadow-lg hover:border-accent transition-all duration-200 text-left"
             >
-              {/* Pokémon Image Placeholder */}
-              <div className="w-full aspect-square bg-secondary rounded-md mb-3 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent">
-                    #{pokemon.id.toString().padStart(3, "0")}
-                  </div>
-                </div>
+              {/* Pokémon Image */}
+              <div className="w-full aspect-square bg-secondary rounded-md mb-3 flex items-center justify-center group-hover:bg-accent/10 transition-colors overflow-hidden">
+                <img
+                  src={getPokemonImageUrl(pokemon.id)}
+                  alt={pokemon.name}
+                  className="w-full h-full object-contain p-2"
+                  loading="lazy"
+                />
               </div>
 
               {/* Pokémon Name */}
@@ -190,14 +196,13 @@ export default function Home() {
 
             {/* Modal Content */}
             <div className="p-6 space-y-6">
-              {/* Image Placeholder */}
-              <div className="w-full aspect-square bg-secondary rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl font-bold text-accent mb-2">
-                    #{selectedPokemon.id.toString().padStart(3, "0")}
-                  </div>
-                  <p className="text-muted-foreground">Image placeholder</p>
-                </div>
+              {/* Pokémon Image */}
+              <div className="w-full aspect-square bg-secondary rounded-lg flex items-center justify-center overflow-hidden">
+                <img
+                  src={getPokemonImageUrl(selectedPokemon.id)}
+                  alt={selectedPokemon.name}
+                  className="w-full h-full object-contain p-4"
+                />
               </div>
 
               {/* Description */}
