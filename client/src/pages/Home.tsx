@@ -2,7 +2,8 @@ import { useState, useMemo } from "react";
 import { POKEMON_DATA, TYPE_COLORS, Pokemon } from "@/lib/pokemonData";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X, Search } from "lucide-react";
+import { X, Search, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 /**
  * Modern Minimalist Pokédex
@@ -11,12 +12,14 @@ import { X, Search } from "lucide-react";
  * - Poppins headings + Inter body text
  * - Smooth transitions and hover effects
  * - Pokémon images from official PokéAPI artwork
+ * - Dark/Light theme toggle
  */
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const { theme, toggleTheme } = useTheme();
 
   // Get unique types from all Pokémon
   const allTypes = useMemo(() => {
@@ -48,12 +51,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur">
-        <div className="container py-6">
-          <h1 className="text-3xl font-bold text-foreground">Kanto Pokédex</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Complete reference for all 151 Pokémon from the Kanto region
-          </p>
+      <header className="sticky top-0 z-40 border-b border-border bg-white/95 dark:bg-card/95 backdrop-blur">
+        <div className="container py-6 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Kanto Pokédex</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Complete reference for all 151 Pokémon from the Kanto region
+            </p>
+          </div>
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg border border-border hover:bg-secondary transition-colors duration-200"
+            title={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
+          >
+            {theme === "light" ? (
+              <Moon className="w-5 h-5 text-foreground" />
+            ) : (
+              <Sun className="w-5 h-5 text-foreground" />
+            )}
+          </button>
         </div>
       </header>
 
@@ -69,7 +86,7 @@ export default function Home() {
               placeholder="Search by name or ID (e.g., 'Pikachu' or '25')"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 py-2 h-11 bg-white border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+              className="pl-10 py-2 h-11 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -118,7 +135,7 @@ export default function Home() {
             <button
               key={pokemon.id}
               onClick={() => setSelectedPokemon(pokemon)}
-              className="group bg-white border border-border rounded-lg p-4 hover:shadow-lg hover:border-accent transition-all duration-200 text-left"
+              className="group bg-card border border-border rounded-lg p-4 hover:shadow-lg hover:border-accent transition-all duration-200 text-left"
             >
               {/* Pokémon Image */}
               <div className="w-full aspect-square bg-secondary rounded-md mb-3 flex items-center justify-center group-hover:bg-accent/10 transition-colors overflow-hidden">
@@ -173,11 +190,11 @@ export default function Home() {
           onClick={() => setSelectedPokemon(null)}
         >
           <div
-            className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-border p-6 flex justify-between items-start">
+            <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-start">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">
                   {selectedPokemon.name}
